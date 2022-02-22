@@ -7,6 +7,11 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
+import './styles/miscellaneous.css';
 
 // start the Stimulus application
 import './bootstrap';
+
+const $ = require('./jquery-3.6.0.min');
+console.log("in app");
+Window.prototype.$ = $; 

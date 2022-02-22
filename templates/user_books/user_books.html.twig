@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserBookController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Your books!</h1>
+    <div>
+        <div>
+            List of bookshelves:
+            <select class="form-control" id="book-shelves">
+                <option value="currently_reading">Currenlty reading</option>
+                <option value="to_read">To read</option>
+                <option value="read">Read</option>
+            </select>
+        </div>
+        <div class="hourglass-container">
+            <div class="lds-hourglass"></div>
+        </div>
+       <div class="user-books"></div>
+    </div>
+        
+</div>
+{% endblock %}
+{% block extra_js %} 
+<script>
+    const LIST_USER_BOOKS_URL = '{{list_user_books_url}}';
+</script>
+{{ encore_entry_script_tags('user_book_index') }}
+{% endblock %}
