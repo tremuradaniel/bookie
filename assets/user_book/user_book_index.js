@@ -24,9 +24,18 @@ function getUserBookShelve(shelve) {
 function displayShelve(data) {
   $(".hourglass-container").hide();
   if (data.length) {
-
+    // TO DO populate with user's books
   } else {
-    $(USER_BOOKS_CLASS).append('<p>No books found for this shelve! <a href="#">Search your book here!</a></p>')
+    $(USER_BOOKS_CLASS).append('<p>No books found for this shelve!');
+    $(USER_BOOKS_CLASS).append(`
+    <div class="container">
+      <div class="row height d-flex justify-content-center align-items-center">
+          <div class="col-md-8">
+              <div class="search"><i class="fa fa-search"></i> <input type="text" class="form-control" placeholder="Search the book"> <button class="btn btn-primary">Search</button> </div>
+          </div>
+      </div>
+    </div>
+    `);
   }
 } 
 
@@ -37,6 +46,6 @@ function setEventOnBookShelvesSelect() {
     currentBookShelve = this.value
     $(USER_BOOKS_CLASS).empty();
     $(".hourglass-container").show();
-    getUserBookShelve(currentBookShelve)
+    getUserBookShelve(currentBookShelve);
   });
 }
