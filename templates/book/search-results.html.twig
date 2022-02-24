@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <ul>
+      {% for book in books %}
+        <li>{{book.first_name}}|{{book.last_name}}|{{book.title}}</li>
+      {% endfor %}
+    </ul>
+    {% if books is empty %}
+        No results found for "{{searchTerm}}"! You can add a new book <a href="#">here</a>
+    {% endif %}
+</div>
+{% endblock %}

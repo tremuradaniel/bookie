@@ -5,6 +5,7 @@ let currentBookShelve = "currently_reading";
 console.log(LIST_USER_BOOKS_URL);
 $(window).on("load", getUserBookShelve(currentBookShelve));
 $(window).on("load", setEventOnBookShelvesSelect());
+$(window).on("load", setEventOnSearchBook());
 
 
 function getUserBookShelve(shelve) {
@@ -31,7 +32,24 @@ function displayShelve(data) {
     <div class="container">
       <div class="row height d-flex justify-content-center align-items-center">
           <div class="col-md-8">
-              <div class="search"><i class="fa fa-search"></i> <input type="text" class="form-control" placeholder="Search the book"> <button class="btn btn-primary">Search</button> </div>
+            <form action="/search-book" method="POST">
+              <div class="search">
+                <i class="fa fa-search"></i> <input name="search-term" id="search-input" type="text" class="form-control" placeholder="Search...">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="search-term-type" value="title" id="flexRadioTitle" checked>
+                  <label class="form-check-label" for="flexRadioTitle">
+                    Title
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="search-term-type" value="author" id="flexRadioAuthor">
+                  <label class="form-check-label" for="flexRadioAuthor">
+                    Author
+                  </label>
+                </div>
+                <button id="search-book-button" class="btn btn-primary">Search</button> 
+              </div>    
+            </form>
           </div>
       </div>
     </div>
@@ -43,7 +61,7 @@ function displayShelve(data) {
 function setEventOnBookShelvesSelect() {
   $("#book-shelves").on("change", function() {
     if (this.value == currentBookShelve) return;
-    currentBookShelve = this.value
+    currentBookShelve = this.value;
     $(USER_BOOKS_CLASS).empty();
     $(".hourglass-container").show();
     getUserBookShelve(currentBookShelve);
