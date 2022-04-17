@@ -34,7 +34,8 @@ function displayShelve(data) {
           <div class="col-md-8">
             <form action="/search-book" method="POST">
               <div class="search">
-                <i class="fa fa-search"></i> <input name="search-term" id="search-input" type="text" class="form-control" placeholder="Search...">
+                <i class="fa fa-search"></i> <input name="search-term" id="search-input" type="text" class="form-control"
+                  placeholder="Search..." required>
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="search-term-type" value="title" id="flexRadioTitle" checked>
                   <label class="form-check-label" for="flexRadioTitle">
