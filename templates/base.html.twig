@@ -10,7 +10,9 @@
         {% endblock %}
     </head>
     <body class="d-flex h-100 text-center text-white bg-secondary">
-        {% block body %}{% endblock %}
+        {% include 'flash_messages.html.twig' %}
+        {% block body %}
+        {% endblock %}
     </body>
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}

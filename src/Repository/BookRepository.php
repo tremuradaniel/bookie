@@ -30,11 +30,13 @@ class BookRepository extends ServiceEntityRepository
                 SELECT 
                     a.first_name,
                     a.last_name,
-                    b.name as title 
+                    b.title 
                 FROM books b
-                JOIN authors a 
-                ON (b.author_id = a.id)
-                WHERE b.name LIKE :name
+                JOIN book_author ba 
+                    ON (ba.book_id = b.id)
+                JOIN authors a
+                    ON (ba.author_id = a.id)
+                WHERE b.title LIKE :name
             ';
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery(['name' => sprintf("%%%s%%", $title)]);
