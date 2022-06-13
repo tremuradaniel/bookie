@@ -11,7 +11,7 @@
       {% endfor %}
     </ul>
     {% if books is empty %}
-        No results found for "{{searchTerm}}"! You can add a new book <a href="#">here</a>
+        No results found for "{{searchTerm}}"! You can add a new book <a href="{{path("book-form")}}">here</a>
     {% endif %}
 </div>
 {% endblock %}

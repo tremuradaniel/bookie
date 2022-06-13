@@ -2,11 +2,17 @@
 
 namespace App\Controller;
 
+use Exception;
+use App\Entity\Book;
+use App\Entity\Author;
+use App\Form\BookType;
 use App\Repository\BookRepository;
 use App\Repository\AuthorRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BookController extends AbstractController
@@ -23,8 +29,8 @@ class BookController extends AbstractController
         $this->bookRepo = $bookRepo;
     }
 
-    #[Route('/book', name: 'book')]
-    public function index(): Response
+    #[Route('/book/{bookId}', name: 'book')]
+    public function book($bookId): Response
     {
         return $this->render('book/index.html.twig', [
             'controller_name' => 'BookController',
@@ -46,6 +52,43 @@ class BookController extends AbstractController
         return $this->render('book/search-results.html.twig', [
             'books' => $books,
             'searchTerm' => $searchTerm
+        ]);
+    }
+
+    #[Route('/book-form', name: 'book-form')]
+    public function bookForm(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $book = new Book();
+        $author = new Author();
+
+        $book->addAuthor($author);
+
+        $form = $this->createForm(BookType::class, $book);
+
+        $form->handleRequest($request);
+
+        try {
+            if ($form->isSubmitted() && $form->isValid()) {
+                $book = $form->getData();
+
+                $entityManager->persist($author);
+                $entityManager->persist($book);
+                $entityManager->flush($author);
+
+                return $this->redirectToRoute('book', ["bookId" => $book->getId()]);
+            }
+        } catch (UniqueConstraintViolationException $e) {
+            $this->addFlash(
+                'error',
+                'Book/author already present!'
+            );
+            return $this->redirectToRoute("book-form");
+        } catch (Exception $e) {
+            var_dump("Something went wrong:" , $e);
+        }
+
+        return $this->renderForm('book/form.html.twig', [
+            'form' => $form,
         ]);
     }
 }

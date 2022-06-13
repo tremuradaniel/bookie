@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\BookRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\BookAuthor;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\BookRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
+#[ORM\Table(name:'books')]
 class Book
 {
     #[ORM\Id]
@@ -44,7 +46,7 @@ class Book
     }
 
     /**
-     * @return Collection|Author[]
+     * @return Collection|BookAuthor[]
      */
     public function getAuthor(): Collection
     {
