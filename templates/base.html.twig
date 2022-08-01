@@ -9,13 +9,19 @@
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
     </head>
-    <body class="d-flex h-100 text-center text-white bg-secondary">
-        {% include 'flash_messages.html.twig' %}
-        {% block body %}
-        {% endblock %}
+    <body class="d-flex flex-column h-100">
+        {% include 'navbar.html.twig' %} 
+        <main class="flex-shrink-0">
+            <div id="main-container" class="container">           
+                {% include 'flash_messages.html.twig' %}
+                {% block body %}
+                {% endblock %}
+            </div>
+        </main>
     </body>
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
+        {{ encore_entry_script_tags('search') }}
         {% block extra_js %}{% endblock %}
     {% endblock %}
 </html>

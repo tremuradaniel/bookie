@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class BookController extends AbstractController
 {
@@ -32,8 +33,10 @@ class BookController extends AbstractController
     #[Route('/book/{bookId}', name: 'book')]
     public function book($bookId): Response
     {
-        return $this->render('book/index.html.twig', [
-            'controller_name' => 'BookController',
+        $book = $this->bookRepo->find($bookId);
+
+        return $this->render('book/book.html.twig', [
+            'book' => $book,
         ]);
     }
 
@@ -90,5 +93,20 @@ class BookController extends AbstractController
         return $this->renderForm('book/form.html.twig', [
             'form' => $form,
         ]);
+    }
+
+    #[Route('/search-book-author', name: 'search-book-author')]
+    public function searchBookAuthor(Request $request): JsonResponse
+    {
+        $params = $request->request->all();
+
+        try {
+            $searchTerm = $params["searchKey"];
+            $response = new JsonResponse(['data' => $this->bookRepo->getBookAuthor($searchTerm)]);
+        } catch (Exception $e) {
+            var_dump($e);
+        }
+
+        return $response;
     }
 }

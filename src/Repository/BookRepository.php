@@ -14,6 +14,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BookRepository extends ServiceEntityRepository
 {
+
+    private const BOOK_ID_ALIAS = "bookId";
+    private const MAX_RESULTS_IN_QUICK_SEARCH = 8;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Book::class);
@@ -41,22 +45,34 @@ class BookRepository extends ServiceEntityRepository
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery(['name' => sprintf("%%%s%%", $title)]);
 
-        // returns an array of arrays (i.e. a raw data set)
-
-        // return 
        return $resultSet->fetchAllAssociative();
-
     }
 
-    /*
-    public function findOneBySomeField($value): ?Book
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+    public function getBookAuthor($searchTerm) {
+
+        $qb = $this->createQueryBuilder('b');
+
+            $qb->select('b.id AS ' . self::BOOK_ID_ALIAS)
+                ->addSelect('b.title')
+                ->addSelect('a.firstName')
+                ->addSelect('a.lastName')
+                ->join('App\Entity\BookAuthor', 'ba', 'WITH', 'b.id = ba.bookId')
+                ->join('App\Entity\Author', 'a', 'WITH', 'a.id = ba.authorId')
+                ->where($qb->expr()->like('a.firstName', ':searchTerm'))
+                ->orWhere($qb->expr()->like('a.lastName', ':searchTerm'))
+                ->orWhere($qb->expr()->like('b.title', ':searchTerm'))
+                ->setParameter('searchTerm', sprintf("%%%s%%", $searchTerm))
+                ->setMaxResults(self::MAX_RESULTS_IN_QUICK_SEARCH);
+
+                $result = $qb
+                ->getQuery()
+            ->getArrayResult()
+                ;
+
+        return $result;
+    //     $stmt = $conn->prepare($sql);
+    //     $resultSet = $stmt->executeQuery(['name' => sprintf("%%%s%%", $searchTerm)]);
+
+    //    return $resultSet->fetchAllAssociative();
     }
-    */
 }

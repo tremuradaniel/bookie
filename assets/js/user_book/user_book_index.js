@@ -2,14 +2,22 @@ const USER_BOOKS_CLASS = ".user-books";
 let isLoading = true;
 let currentBookShelve = "currently_reading";
 
+let setEventOnBookShelvesSelect = () => {
+  $("#book-shelves").on("change", function() {
+    if (this.value == currentBookShelve) return;
+    currentBookShelve = this.value;
+    $(USER_BOOKS_CLASS).empty();
+    $(".hourglass-container").show();
+    getUserBookShelve(currentBookShelve);
+  });
+}
+
 console.log(LIST_USER_BOOKS_URL);
 $(window).on("load", getUserBookShelve(currentBookShelve));
 $(window).on("load", setEventOnBookShelvesSelect());
-$(window).on("load", setEventOnSearchBook());
 
 
 function getUserBookShelve(shelve) {
-  console.log('testq');
   $.ajax({
       url: LIST_USER_BOOKS_URL + "/" + shelve,
       type: "POST",
@@ -57,14 +65,3 @@ function displayShelve(data) {
     `);
   }
 } 
-
-
-function setEventOnBookShelvesSelect() {
-  $("#book-shelves").on("change", function() {
-    if (this.value == currentBookShelve) return;
-    currentBookShelve = this.value;
-    $(USER_BOOKS_CLASS).empty();
-    $(".hourglass-container").show();
-    getUserBookShelve(currentBookShelve);
-  });
-}
